@@ -1,5 +1,7 @@
 import System.IO
 import FuncoesJogo
+import Data.List
+-- import System.Console.ANSI
  
 menu = do
   putStrLn "\n\nBem vindo ao jogo Perfil em Haskell"
@@ -11,6 +13,7 @@ menu = do
   opcao <- getLine
   case opcao of "1" -> do
                   putStr "\ESC[2J"
+                  -- hClearScreen
                   putStrLn "Quantas pessoas irao jogar ?"
                   qtd <- getLine
                   -- putStrLn (qtd ++ " jogadores")
@@ -19,11 +22,15 @@ menu = do
                   listaJogadores <- coletaJogadores jogadores numJ 0
                   -- print (show listaJogadores)
                   numeroCarta <- sorteiaCarta
-                  putStrLn ("fora da funcao " ++ show (numeroCarta))
-                  cartas <- carregaCartas
-                  -- print cartas
-                  let listaCartas = converte cartas []
-                  putStrLn (show (listaCartas !! numeroCarta))
+                  -- putStrLn ("fora da funcao " ++ show (numeroCarta))
+                  listaCartas <- formaListaCartas
+                  -- print listaCartas
+                  cartaSorteada <- pegaCartaSorteada numeroCarta listaCartas
+                  -- print cartaSorteada
+                  avisaAssunto cartaSorteada
+                  let dicas = []
+                  loopJogo numJ listaJogadores cartaSorteada dicas 0
+                  -- print $ show $ length listaCartas
                   menu
                   
                 "2" -> do
