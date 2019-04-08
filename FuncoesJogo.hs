@@ -9,7 +9,6 @@ module FuncoesJogo
 ,   loopJogo
 ,   obterNumero
 ,   obterNome
-,   obterPontuacao
 ,   obterNumeroCarta
 ,   obterResposta
 ,   obterAssunto
@@ -41,7 +40,6 @@ import Data.Char
 
 data Jogador = Jogador  { numero :: Int
                         , nome :: String
-                        , pontuacao :: Int
                         } deriving (Show, Read, Eq)
 
 data Carta = Carta      { numCarta :: Int
@@ -74,22 +72,20 @@ coletaJogadores jogadores numJ aux = do
     if numJ /= aux then do
         putStrLn ("\nDigite o nome do jogador " ++ show (aux+1) ++  ": ")
         jogador <- getLine
-        let novoJogador = [Jogador { numero = aux, nome = jogador , pontuacao = 0 }]
+        let novoJogador = [Jogador { numero = aux, nome = jogador}]
         coletaJogadores (jogadores ++ novoJogador) numJ (aux+1)
     else
         return $ jogadores
 
 sorteiaCarta :: IO Int
 sorteiaCarta  = do
-    number <- randomRIO (0,1) :: IO Int
-    putStrLn ("dentro da funcao " ++ show (number))
+    number <- randomRIO (0,15) :: IO Int
     return number
     
 carregaCartas :: IO [String]
 carregaCartas = do
     arq <- readFile "listaDicas.txt"
     let cartas = lines arq
-    -- putStrLn ("carrega cartas " ++ show (dicas))
     return $ cartas
 
 converte :: [String] -> [FuncoesJogo.Carta] -> [FuncoesJogo.Carta]
@@ -102,20 +98,19 @@ converte (x:xs) ys = converte xs (( read x :: FuncoesJogo.Carta ) : ys)
 formaListaCartas :: IO [FuncoesJogo.Carta]
 formaListaCartas  = do
     cartas <- carregaCartas
-    -- print cartas
     let listaCartas = reverse $ converte cartas []
-    -- print listaCartas
     return listaCartas
 
 pegaCartaSorteada :: Monad m => Int -> [a] -> m a
 pegaCartaSorteada numeroCarta listaCartas = do
     let cartaSorteada = listaCartas !! numeroCarta
-    -- print cartaSorteada
     return cartaSorteada
 
 avisaAssunto :: FuncoesJogo.Carta -> IO ()
 avisaAssunto cartaSorteada = do
+    putStrLn "\n\n--------------------------------------------------------------------------------"
     putStrLn ("\nAvise aos jogadores que sou um(a) " ++ (map toUpper(obterAssunto cartaSorteada)))
+    putStrLn "--------------------------------------------------------------------------------"
 
 loopJogo :: Int -> [FuncoesJogo.Jogador] -> FuncoesJogo.Carta -> [Int] -> Int -> IO ()
 loopJogo numJ jogadores cartaSorteada dicas aux = do
@@ -123,85 +118,124 @@ loopJogo numJ jogadores cartaSorteada dicas aux = do
         if aux == numJ then do
             loopJogo numJ jogadores cartaSorteada dicas 0
         else do
-            putStrLn ("Vez do Jogador " ++ show (obterNumero(jogadores !! aux) + 1) ++ " - " ++ (map toUpper(obterNome (jogadores !! aux))))
+            putStrLn ("\n\nVez do Jogador " ++ show (obterNumero(jogadores !! aux) + 1) ++ " - " ++ (map toUpper(obterNome (jogadores !! aux))))
             putStrLn "Digite um número de 1 a 20: "
             numeroDica <- getLine
             let numDica = read numeroDica :: Int
-            let strDica = show numDica
-            let numDicaLista = read strDica :: Int
-            print (numDicaLista : dicas)
-            let confereListaDica = numDica `elem` dicas
-            if  confereListaDica == True then do
-                putStrLn "Essa dica já saiu digite novamente"
+            if  numDica > 20 || numDica < 1 then do
+                putStrLn "Essa dica não existe digite novamente"
                 loopJogo numJ jogadores cartaSorteada dicas aux
             else do
-                case numDica of 1 -> do
-                                    putStrLn (show (obterDica1(cartaSorteada)))
-                                2 -> do
-                                    putStrLn (show (obterDica2(cartaSorteada)))
-                                3 -> do
-                                    putStrLn (show (obterDica3(cartaSorteada)))  
-                                4 -> do
-                                    putStrLn (show (obterDica4(cartaSorteada)))  
-                                5 -> do
-                                    putStrLn (show (obterDica5(cartaSorteada)))  
-                                6 -> do
-                                    putStrLn (show (obterDica6(cartaSorteada)))  
-                                7 -> do
-                                    putStrLn (show (obterDica7(cartaSorteada)))  
-                                8 -> do
-                                    putStrLn (show (obterDica8(cartaSorteada)))  
-                                9 -> do
-                                    putStrLn (show (obterDica9(cartaSorteada)))    
-                                10 -> do
-                                    putStrLn (show (obterDica10(cartaSorteada)))  
-                                11 -> do
-                                    putStrLn (show (obterDica11(cartaSorteada)))
-                                12 -> do
-                                    putStrLn (show (obterDica12(cartaSorteada)))
-                                13 -> do
-                                    putStrLn (show (obterDica13(cartaSorteada)))  
-                                14 -> do
-                                    putStrLn (show (obterDica14(cartaSorteada)))  
-                                15 -> do
-                                    putStrLn (show (obterDica15(cartaSorteada)))  
-                                16 -> do
-                                    putStrLn (show (obterDica16(cartaSorteada)))  
-                                17 -> do
-                                    putStrLn (show (obterDica17(cartaSorteada)))  
-                                18 -> do
-                                    putStrLn (show (obterDica18(cartaSorteada)))  
-                                19 -> do
-                                    putStrLn (show (obterDica19(cartaSorteada)))    
-                                20 -> do
-                                    putStrLn (show (obterDica20(cartaSorteada)))
+                let strDica = show numDica
+                let numDicaLista = read strDica :: Int
+                let confereListaDica = numDica `elem` dicas
+                if  confereListaDica == True then do
+                    putStrLn "Essa dica já saiu digite novamente"
+                    loopJogo numJ jogadores cartaSorteada dicas aux
+                else do
+                    case numDica of 1 -> do
+                                        putStrLn "\n\n--------------------------------------------------------------------------------"
+                                        putStrLn (show (obterDica1(cartaSorteada)))
+                                        putStrLn "--------------------------------------------------------------------------------"
+                                    2 -> do
+                                        putStrLn "\n\n--------------------------------------------------------------------------------"
+                                        putStrLn (show (obterDica2(cartaSorteada)))
+                                        putStrLn "--------------------------------------------------------------------------------"
+                                    3 -> do
+                                        putStrLn "\n\n--------------------------------------------------------------------------------"
+                                        putStrLn (show (obterDica3(cartaSorteada)))  
+                                        putStrLn "--------------------------------------------------------------------------------"
+                                    4 -> do
+                                        putStrLn "\n\n--------------------------------------------------------------------------------"
+                                        putStrLn (show (obterDica4(cartaSorteada)))  
+                                        putStrLn "--------------------------------------------------------------------------------"
+                                    5 -> do
+                                        putStrLn "\n\n--------------------------------------------------------------------------------"
+                                        putStrLn (show (obterDica5(cartaSorteada)))  
+                                        putStrLn "--------------------------------------------------------------------------------"
+                                    6 -> do
+                                        putStrLn "\n\n--------------------------------------------------------------------------------"
+                                        putStrLn (show (obterDica6(cartaSorteada)))  
+                                        putStrLn "--------------------------------------------------------------------------------"
+                                    7 -> do
+                                        putStrLn "\n\n--------------------------------------------------------------------------------"
+                                        putStrLn (show (obterDica7(cartaSorteada)))  
+                                        putStrLn "--------------------------------------------------------------------------------"
+                                    8 -> do
+                                        putStrLn "\n\n--------------------------------------------------------------------------------"
+                                        putStrLn (show (obterDica8(cartaSorteada)))  
+                                        putStrLn "--------------------------------------------------------------------------------"
+                                    9 -> do
+                                        putStrLn "\n\n--------------------------------------------------------------------------------"
+                                        putStrLn (show (obterDica9(cartaSorteada)))    
+                                        putStrLn "--------------------------------------------------------------------------------"
+                                    10 -> do
+                                        putStrLn "\n\n--------------------------------------------------------------------------------"
+                                        putStrLn (show (obterDica10(cartaSorteada)))  
+                                        putStrLn "--------------------------------------------------------------------------------"
+                                    11 -> do
+                                        putStrLn "\n\n--------------------------------------------------------------------------------"
+                                        putStrLn (show (obterDica11(cartaSorteada)))
+                                        putStrLn "--------------------------------------------------------------------------------"
+                                    12 -> do
+                                        putStrLn "\n\n--------------------------------------------------------------------------------"
+                                        putStrLn (show (obterDica12(cartaSorteada)))
+                                        putStrLn "--------------------------------------------------------------------------------"
+                                    13 -> do
+                                        putStrLn "\n\n--------------------------------------------------------------------------------"
+                                        putStrLn (show (obterDica13(cartaSorteada)))  
+                                        putStrLn "--------------------------------------------------------------------------------"
+                                    14 -> do
+                                        putStrLn "\n\n--------------------------------------------------------------------------------"
+                                        putStrLn (show (obterDica14(cartaSorteada)))  
+                                        putStrLn "--------------------------------------------------------------------------------"
+                                    15 -> do
+                                        putStrLn "\n\n--------------------------------------------------------------------------------"
+                                        putStrLn (show (obterDica15(cartaSorteada)))  
+                                        putStrLn "--------------------------------------------------------------------------------"
+                                    16 -> do
+                                        putStrLn "\n\n--------------------------------------------------------------------------------"
+                                        putStrLn (show (obterDica16(cartaSorteada)))  
+                                        putStrLn "--------------------------------------------------------------------------------"
+                                    17 -> do
+                                        putStrLn "\n\n--------------------------------------------------------------------------------"
+                                        putStrLn (show (obterDica17(cartaSorteada)))  
+                                        putStrLn "--------------------------------------------------------------------------------"
+                                    18 -> do
+                                        putStrLn "\n\n--------------------------------------------------------------------------------"
+                                        putStrLn (show (obterDica18(cartaSorteada)))  
+                                        putStrLn "--------------------------------------------------------------------------------"
+                                    19 -> do
+                                        putStrLn "\n\n--------------------------------------------------------------------------------"
+                                        putStrLn (show (obterDica19(cartaSorteada)))    
+                                        putStrLn "--------------------------------------------------------------------------------"
+                                    20 -> do
+                                        putStrLn "\n\n--------------------------------------------------------------------------------"
+                                        putStrLn (show (obterDica20(cartaSorteada)))
+                                        putStrLn "--------------------------------------------------------------------------------"
 
-                putStrLn "Deseja dar um palpite ? (s ou n)"   
-                escolha <- getChar
-                if escolha == 's' then do
-                    putStrLn "\nDigite seu palpite: "
-                    resposta <- getLine
-                    if resposta == obterResposta(cartaSorteada) then do
-                        putStrLn("\nO jogador " ++ (map toUpper(obterNome (jogadores !! aux))) ++ " venceu =)")
-                        putStrLn("\nVocê ganhou " ++ show (20 - (length dicas + 1)) ++ " pontos ")
-                        return ()
-                    else do
-                        putStrLn "Essa nao é a resposta :("
+                    putStrLn "\nDeseja dar um palpite ? (s para sim ou digite qualquer coisa para não)"   
+                    escolha <- getChar
+                    if escolha == 's' then do
+                        putStrLn "\nDigite seu palpite: "
+                        resposta <- getLine
+                        if resposta == obterResposta(cartaSorteada) then do
+                            putStrLn("\nO jogador " ++ (map toUpper(obterNome (jogadores !! aux))) ++ " venceu =)")
+                            return ()
+                        else do
+                            putStrLn "\nEssa nao é a resposta :("
+                            loopJogo numJ jogadores cartaSorteada (numDicaLista : dicas) (aux+1)
+                    else
                         loopJogo numJ jogadores cartaSorteada (numDicaLista : dicas) (aux+1)
-                else
-                    loopJogo numJ jogadores cartaSorteada (numDicaLista : dicas) (aux+1)
     else 
-        putStrLn "O número máximo de dicas foi atingido. Nenhum jogador obteve pontos"
+        putStrLn "\nO número máximo de dicas foi atingido. Nenhum jogador venceu a partida"
 
 
 obterNumero :: Jogador -> Int
-obterNumero (Jogador numero _ _) = numero
+obterNumero (Jogador numero _ ) = numero
 
 obterNome :: Jogador -> String
-obterNome (Jogador _ nome _) = nome
-
-obterPontuacao :: Jogador -> Int
-obterPontuacao (Jogador _ _ pontuacao) = pontuacao
+obterNome (Jogador _ nome) = nome
 
 obterNumeroCarta :: FuncoesJogo.Carta -> Int
 obterNumeroCarta (Carta numCarta _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) = numCarta
