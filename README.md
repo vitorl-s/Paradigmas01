@@ -2,10 +2,13 @@
 ## Jogo - Perfil
 
 ###  Como executar:
-  - Clone o repositório:$ git clone https://github.com/vitorl-s/Para-Dilgmas01.git
-  - No terminal, execute o comando:$ ghci
-  - $ :l perfil.hs
-  - $ menu
+  - Clone o repositório
+     $ git clone https://github.com/vitorl-s/Para-Dilgmas01.git
+  - No terminal, execute os comandos:
+     $ ghci
+     $ :l perfil.hs
+     $ menu
+     
 ### Como jogar:
   - Deverá ser indicado a quantidade de jogadores que irão participar e, em seguida escrever o nome dos mesmos;
   - Será escolhido uma "carta" e indicará qual o tipo dessa carta(Coisa, Ano, Pessoa, Lugar);
