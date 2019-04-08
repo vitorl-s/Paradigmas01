@@ -1,7 +1,5 @@
 import System.IO
 import FuncoesJogo
-import Data.List
--- import System.Console.ANSI
  
 menu = do
   putStrLn "\n\nBem vindo ao jogo Perfil em Haskell"
@@ -13,7 +11,7 @@ menu = do
   opcao <- getLine
   let numOpcao = read opcao :: Int
   if  numOpcao < 0 || numOpcao > 2 then do
-    putStrLn "Digite uma opcao valida"
+    putStrLn "O numero que voce digitou nao e uma operacao valida... Tente novamente"
     menu
   else do
     case numOpcao of  1 -> do
@@ -33,7 +31,7 @@ menu = do
                       2 -> do
                         regras <- readFile "regras.txt"
                         putStrLn regras
-                        putStrLn "\n\nAperte ENTER para voltar ao menu"
+                        putStrLn "\n\nAperte QUALQUER TECLA para voltar ao menu"
                         confirma <- getChar
                         menu
                       0 -> do

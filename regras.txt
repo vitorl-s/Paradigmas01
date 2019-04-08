@@ -5,3 +5,5 @@
 4 - A dica será apresentada e o mesmo jogador deve escolher se arrisca um palpite ou não;
 5 - Se o jogador acertar a resposta é declarado como vencedor. Caso o contrário a vez passa para o próximo;
 6 - O jogo continua até que um jogador acerte a resposta e vença ou até que todas as dicas sejam solicitadas e nenhum jogador acerte a resposta, deixando o jogo sem um vencedor.
+
+IMPORTANTE: a resposta deve ser digitada levando em consideracao letras maiusculas e minusculas, e sem acentos ou caracteres especiais.

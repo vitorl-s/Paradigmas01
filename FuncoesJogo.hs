@@ -35,7 +35,6 @@ module FuncoesJogo
 )where
 
 import System.Random (randomRIO)
-import Data.List
 import Data.Char
 
 data Jogador = Jogador  { numero :: Int
@@ -123,14 +122,14 @@ loopJogo numJ jogadores cartaSorteada dicas aux = do
             numeroDica <- getLine
             let numDica = read numeroDica :: Int
             if  numDica > 20 || numDica < 1 then do
-                putStrLn "Essa dica não existe digite novamente"
+                putStrLn "Opsss...Essa dica não existe...digite novamente"
                 loopJogo numJ jogadores cartaSorteada dicas aux
             else do
                 let strDica = show numDica
                 let numDicaLista = read strDica :: Int
                 let confereListaDica = numDica `elem` dicas
                 if  confereListaDica == True then do
-                    putStrLn "Essa dica já saiu digite novamente"
+                    putStrLn "Essa dica já saiu... digite novamente"
                     loopJogo numJ jogadores cartaSorteada dicas aux
                 else do
                     case numDica of 1 -> do
@@ -214,13 +213,13 @@ loopJogo numJ jogadores cartaSorteada dicas aux = do
                                         putStrLn (show (obterDica20(cartaSorteada)))
                                         putStrLn "--------------------------------------------------------------------------------"
 
-                    putStrLn "\nDeseja dar um palpite ? (s para sim ou digite qualquer coisa para não)"   
+                    putStrLn "\nDeseja dar um palpite ? (s para sim ou aperte qualquer tecla para não)"   
                     escolha <- getChar
-                    if escolha == 's' then do
+                    if toLower(escolha) == 's' then do
                         putStrLn "\nDigite seu palpite: "
                         resposta <- getLine
                         if resposta == obterResposta(cartaSorteada) then do
-                            putStrLn("\nO jogador " ++ (map toUpper(obterNome (jogadores !! aux))) ++ " venceu =)")
+                            putStrLn("\nO jogador(a) " ++ (map toUpper(obterNome (jogadores !! aux))) ++ " venceu =)")
                             return ()
                         else do
                             putStrLn "\nEssa nao é a resposta :("
