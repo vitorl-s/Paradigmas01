@@ -4,15 +4,15 @@
 ###  Como executar:
   - Clone o repositório
   
-    $ git clone https://github.com/vitorl-s/Para-Dilgmas01.git
+    '''$ git clone https://github.com/vitorl-s/Para-Dilgmas01.git'''
      
   - No terminal, execute os comandos:
      
-    $ ghci
+   ''' $ ghci'''
      
-    $ :l perfil.hs
+  '''  $ :l perfil.hs'''
      
-    $ menu
+   ''' $ menu'''
      
 ### Como jogar:
   - Deverá ser indicado a quantidade de jogadores que irão participar e, em seguida escrever o nome dos mesmos;
