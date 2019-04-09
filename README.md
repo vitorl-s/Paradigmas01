@@ -4,7 +4,7 @@
 ###  Como executar:
   - Clone o repositório
   
-    > $ git clone https://github.com/vitorl-s/Para-Dilgmas01.git
+    > $ git clone https://github.com/vitorl-s/Paradigmas01
      
   - No terminal, execute os comandos:
      
